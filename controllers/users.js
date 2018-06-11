@@ -8,9 +8,7 @@ module.exports = function(_) {
         },
 
         indexPage: function(req, res) {
-            return res.render('index', {
-                test: 'this is a test'
-            });
+            return res.render('index');
         }
     }
 }
