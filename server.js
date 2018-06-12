@@ -1,70 +1,19 @@
-// if dependencies only need to be added once, then we can add them directly into server.js 
-// otherwise, if dependencies are to be used more than once, then we add them into container.js and call them later on
-
 const express = require('express');
-const bodyParser = require('body-parser');
-const ejs = require('ejs');
 const http = require('http');
-const cookieParser = require('cookie-parser');
-const validator = require('express-validator');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const mongoose =  require('mongoose');
-const flash = require('flash');
-const passport = require('passport');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const path = require('path');
 
-const container = require('./container');
+const app = express();
+const route = require('./route');
 
+mongoose.connect('mongodb://localhost/kitchen')
+mongoose.Promise = global.Promise;
 
+app.use(bodyParser.json());
+route(app);
 
-// call stuff inside container.js
-container.resolve(function(users) {
-    mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://localhost/database', {
-        useMongoClient: true
-    });
-
-    const app = SetupExpress();
-
-    function SetupExpress() {
-        const app = express();
-        const server = http.createServer(app);
-        server.listen(8000, () => {
-            console.log('Listening on port 8000');
-        });
-        ConfigureExpress(app);
-
-        // setup router
-        const router = require('express-promise-router')();
-        users.SetRouting(router);
-    
-        app.use(router);
-    }
-
-
-    function ConfigureExpress(app) {
-        app.use(express.static('public'));
-        app.use(cookieParser());
-        app.set('view engine', 'ejs');
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({
-            extended: true
-            })
-        );
-
-        app.use(validator());
-        app.use(session({
-            secret: 'thisisasecretkey',
-            resave: true,
-            saveInitialized: true,
-            store: new MongoStore({
-                mongooseConnection: mongoose.connection
-            })
-        }));
-
-        app.use(flash());
-
-        app.use(passport.initialize());
-        app.use(passport.session());
-    }
-});
+const port = process.env.PORT || 8000;
+const server = http.createServer(app);
+server.listen(port);
+console.log(`Localhost running on port ${port}`);
