@@ -1,6 +1,6 @@
 const jwt = require('jwt-simple');
 const config = require('../config');
-const Admin = require('../models/kitchen');
+const User = require('../models/user');
 
 function token(user) {
     const timestamp = new Date().getTime();
@@ -17,31 +17,30 @@ exports.signin = function(req, res, next) {
 
 exports.signup = function(req, res, next) {
     const username = req.body.username;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
+    const email = req.body.email;
     const password = req.body.password;
+    const confirm_password = req.body.confirm_password;
 
-    if (!username || !password || !first_name || !last_name) {
+    if (!username || !email || !password || !confirm_password) {
         return res.status(422).send({ error: 'Fields cannot be blank'});
     }
-    Admin.findOne({ username: username }, function(err, existingAdmin) {
+    User.findOne({ username: username }, function(err, existingUser) {
         if (err) {
             return next(err);
         }
-        if (existingAdmin) {
-            return res.status(422).send({ err: 'Username already in use'});
+        if (existingUser) {
+            return res.status(422).send({ err: 'Email and/or Username already in use'});
         }
-        const admin = new Admin({
+        const user = new User({
             username: username,
-            first_name: first_name,
-            last_name: last_name,
+            email: email,
             password: password
         });
-        admin.save(function(err) {
+        user.save(function(err) {
             if (err) {
                 return next(err);
             }
-            res.json({ token: token(admin) });
+            res.json({ token: token(user) });
         });
     });
 }
