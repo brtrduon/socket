@@ -9,15 +9,19 @@ const requireSignin = passport.authenticate('local', { session: false});
 
 
 module.exports = function(app) {
-    app.get('/', function(req, res) {
+    app.get('/', (req, res) => {
         res.sendFile(__dirname + '/views/index.html');
     });
 
-    app.get('/signin', function(req, res) {
+    app.get('/index', (req, res) => {
+        res.sendFile(__dirname + '/views/index1.html');
+    });
+
+    app.get('/signin', (req, res) => {
         res.sendFile(__dirname + '/views/signin.html');
     });
 
-    app.get('/signup', function(req, res) {
+    app.get('/signup', (req, res) => {
         res.sendFile(__dirname + '/views/signup.html');
     });
 

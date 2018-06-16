@@ -9,7 +9,7 @@ function token(user) {
         iat: timestamp
         }, config.secret
     );
-}
+};
 
 exports.signin = function(req, res, next) {
     res.send({ token: token(req.user) });
