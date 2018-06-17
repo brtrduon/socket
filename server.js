@@ -6,7 +6,6 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const io = require('socket.io');
 
 mongoose.connect('mongodb://localhost/database');
 
@@ -20,7 +19,10 @@ route(app);
 
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-io(server);
 server.listen(port);
+
+
+const io = require('socket.io')(server);
+
 console.log(`Localhost running on ${port}`);
-console.log(io(server));
+console.log(io);

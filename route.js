@@ -8,12 +8,12 @@ const requireSignin = passport.authenticate('local', { session: false});
 
 
 
-module.exports = function(app) {
-    app.get('/', (req, res) => {
-        res.sendFile(__dirname + '/views/index.html');
-    });
+module.exports = (app) => {
+    // app.get('/', (req, res) => {
+    //     res.sendFile(__dirname + '/views/index.html');
+    // });
 
-    app.get('/index', (req, res) => {
+    app.get('/', (req, res) => {
         res.sendFile(__dirname + '/views/index1.html');
     });
 
