@@ -25,4 +25,8 @@ server.listen(port);
 const io = require('socket.io')(server);
 
 console.log(`Localhost running on ${port}`);
-console.log(io);
+// console.log(io);
+
+io.on('connection', (socket) => {
+    console.log('made socket connection,', socket.id);
+});
