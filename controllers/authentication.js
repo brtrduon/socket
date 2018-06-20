@@ -22,8 +22,13 @@ exports.signup = function(req, res, next) {
     const confirm_password = req.body.confirm_password;
 
     if (!username || !email || !password || !confirm_password) {
-        return res.status(422).send({ error: 'Fields cannot be blank'});
+        return res.status(422).send({ error: 'Fields cannot be blank' });
     }
+
+    if (password !== confirm_password) {
+        return res.status(422).send({ error: 'passwords do not match' });
+    }
+
     User.findOne({ username: username }, function(err, existingUser) {
         if (err) {
             return next(err);
